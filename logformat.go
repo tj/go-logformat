@@ -55,16 +55,15 @@ type rgb struct {
 // config is the formatter configuration.
 type config struct {
 	format Formatters
-	color  rgb
 }
 
 // Option function.
 type Option func(*config)
 
-// WithColor option sets the primary color.
-func WithColor(r, g, b uint8) Option {
+// WithFormatters option sets the formatters used.
+func WithFormatters(f Formatters) Option {
 	return func(v *config) {
-		v.color = rgb{r, g, b}
+		v.format = f
 	}
 }
 
