@@ -33,7 +33,7 @@ var DefaultFormatters = Formatters{
 	"string": colors.None,
 	"number": colors.None,
 	"bool":   colors.None,
-	"date":   colors.None,
+	"date":   colors.Gray,
 
 	// Fields.
 	"object.key":       colors.Purple,
@@ -61,14 +61,14 @@ func WithFormatters(f Formatters) Option {
 }
 
 // Compact returns a value in the compact format.
-func Compact(v map[string]interface{}, options ...Option) string {
+func Compact(m map[string]interface{}, options ...Option) string {
 	c := config{
 		format: DefaultFormatters,
 	}
 	for _, o := range options {
 		o(&c)
 	}
-	return compact(v, &c)
+	return compactPrefix(m, &c) + compact(m, &c)
 }
 
 // compact returns a formatted value.
@@ -81,6 +81,37 @@ func compact(v interface{}, c *config) string {
 	default:
 		return primitive(v, c)
 	}
+}
+
+// compactPrefix returns a prefix for log line special-casing, and removes those fields from the map.
+func compactPrefix(m map[string]interface{}, c *config) string {
+	s := "  "
+
+	// timestamp
+	if v, ok := m["timestamp"].(string); ok {
+		t, err := time.Parse(time.RFC3339, v)
+		if err == nil {
+			s += primitive(t, c) + " "
+			delete(m, "timestamp")
+		}
+	}
+
+	// level
+	if v, ok := m["level"].(string); ok {
+		format := c.format[v]
+		if format != nil {
+			s += bold(format(strings.ToUpper(v[:4]))) + " "
+			delete(m, "level")
+		}
+	}
+
+	// message
+	if v, ok := m["message"].(string); ok {
+		s += primitive(v, c) + " "
+		delete(m, "message")
+	}
+
+	return s
 }
 
 // compactMap returns a formatted map.
@@ -116,14 +147,14 @@ func compactSlice(v []interface{}, c *config) string {
 }
 
 // Expanded returns a value in the expanded format.
-func Expanded(v map[string]interface{}, options ...Option) string {
+func Expanded(m map[string]interface{}, options ...Option) string {
 	c := config{
 		format: DefaultFormatters,
 	}
 	for _, o := range options {
 		o(&c)
 	}
-	return expanded(v, "  ", &c)
+	return expanded(m, "  ", &c)
 }
 
 // expanded returns a formatted value with prefix.

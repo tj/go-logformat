@@ -9,10 +9,12 @@ import (
 )
 
 var log = map[string]interface{}{
-	"timestamp": time.Now(),
+	// "timestamp": time.Now(),
+	"timestamp": time.Now().Format(time.RFC3339),
 	"message":   "response",
 	"app":       "up-api",
 	"version":   27,
+	"level":     "info",
 	"fields": map[string]interface{}{
 		"ip":       "35.190.145.206",
 		"plugin":   "logs",
