@@ -3,7 +3,6 @@ package logformat
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"time"
 
@@ -32,14 +31,8 @@ func WithColor(r, g, b uint8) Option {
 	}
 }
 
-// Print a formatted value.
-func Print(v interface{}, options ...Option) error {
-	_, err := os.Stdout.WriteString(Format(v, options...))
-	return err
-}
-
-// Format returns a formatted value.
-func Format(v interface{}, options ...Option) string {
+// Expanded returns a value in the expanded format.
+func Expanded(v interface{}, options ...Option) string {
 	c := config{
 		color: rgb{112, 78, 251},
 	}

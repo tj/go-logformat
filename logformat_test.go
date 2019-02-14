@@ -1,13 +1,14 @@
 package logformat_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
 	logformat "github.com/tj/go-logformat"
 )
 
-var object = map[string]interface{}{
+var log = map[string]interface{}{
 	"timestamp": time.Now(),
 	"message":   "response",
 	"app":       "up-api",
@@ -48,12 +49,12 @@ var object = map[string]interface{}{
 	},
 }
 
-// Test formatting.
-func TestPrint(t *testing.T) {
-	logformat.Print(object)
+// Test expanded logs.
+func TestExpanded(t *testing.T) {
+	fmt.Printf("%s", logformat.Expanded(log))
 }
 
-// Test formatting with custom color.
-func TestPrint_WithColor(t *testing.T) {
-	logformat.Print(object, logformat.WithColor(164, 33, 78))
+// Test expanded logs with color.
+func TestExpanded_WithColor(t *testing.T) {
+	fmt.Printf("%s", logformat.Expanded(log, logformat.WithColor(164, 33, 78)))
 }
