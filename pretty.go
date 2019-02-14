@@ -29,9 +29,7 @@ type Option func(*config)
 // WithColor option sets the primary color.
 func WithColor(r, g, b uint8) Option {
 	return func(v *config) {
-		v.color.r = r
-		v.color.g = g
-		v.color.b = b
+		v.color = rgb{r, g, b}
 	}
 }
 
