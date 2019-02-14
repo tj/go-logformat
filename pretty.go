@@ -11,24 +11,54 @@ import (
 	"github.com/aybabtme/rgbterm"
 )
 
+// rgb struct.
+type rgb struct {
+	r uint8
+	g uint8
+	b uint8
+}
+
+// config is the formatter configuration.
+type config struct {
+	color rgb
+}
+
+// Option function.
+type Option func(*config)
+
+// WithColor option sets the primary color.
+func WithColor(r, g, b uint8) Option {
+	return func(v *config) {
+		v.color.r = r
+		v.color.g = g
+		v.color.b = b
+	}
+}
+
 // Print a formatted value.
-func Print(v interface{}) error {
-	_, err := os.Stdout.WriteString(Format(v))
+func Print(v interface{}, options ...Option) error {
+	_, err := os.Stdout.WriteString(Format(v, options...))
 	return err
 }
 
 // Format returns a formatted value.
-func Format(v interface{}) string {
-	return format(v, "  ")
+func Format(v interface{}, options ...Option) string {
+	c := config{
+		color: rgb{112, 78, 251},
+	}
+	for _, o := range options {
+		o(&c)
+	}
+	return format(v, "  ", &c)
 }
 
 // format returns a formatted value with prefix.
-func format(v interface{}, prefix string) string {
+func format(v interface{}, prefix string, c *config) string {
 	switch v := v.(type) {
 	case map[string]interface{}:
-		return formatMap(v, prefix)
+		return formatMap(v, prefix, c)
 	case []interface{}:
-		return formatSlice(v, prefix)
+		return formatSlice(v, prefix, c)
 	case time.Time:
 		return v.Format(time.Stamp)
 	default:
@@ -37,27 +67,27 @@ func format(v interface{}, prefix string) string {
 }
 
 // formatMap returns a formatted map.
-func formatMap(m map[string]interface{}, prefix string) string {
+func formatMap(m map[string]interface{}, prefix string, c *config) string {
 	s := ""
 	keys := mapKeys(m)
 	for _, k := range keys {
 		v := m[k]
-		k = rgbterm.FgString(k, 112, 78, 251)
+		k = rgbterm.FgString(k, c.color.r, c.color.g, c.color.b)
 		if isComposite(v) {
-			s += fmt.Sprintf("%s%s:\n%s", prefix, k, format(v, prefix+"  "))
+			s += fmt.Sprintf("%s%s:\n%s", prefix, k, format(v, prefix+"  ", c))
 		} else {
-			s += fmt.Sprintf("%s%s: %s\n", prefix, k, format(v, prefix+"  "))
+			s += fmt.Sprintf("%s%s: %s\n", prefix, k, format(v, prefix+"  ", c))
 		}
 	}
 	return s
 }
 
 // formatSlice returns a formatted slice.
-func formatSlice(v []interface{}, prefix string) string {
+func formatSlice(v []interface{}, prefix string, c *config) string {
 	s := ""
 	for i, v := range v {
 		if isComposite(v) {
-			s += fmt.Sprintf("%s%d:\n%s", prefix, i, format(v, prefix+"  "))
+			s += fmt.Sprintf("%s%d:\n%s", prefix, i, format(v, prefix+"  ", c))
 		} else {
 			s += fmt.Sprintf("%s- %v\n", prefix, v)
 		}

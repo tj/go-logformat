@@ -52,3 +52,8 @@ var object = map[string]interface{}{
 func TestPrint(t *testing.T) {
 	pretty.Print(object)
 }
+
+// Test formatting with custom color.
+func TestPrint_WithColor(t *testing.T) {
+	pretty.Print(object, pretty.WithColor(164, 33, 78))
+}
