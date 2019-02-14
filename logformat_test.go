@@ -1,10 +1,10 @@
-package pretty_test
+package logformat_test
 
 import (
 	"testing"
 	"time"
 
-	pretty "github.com/tj/go-pretty"
+	logformat "github.com/tj/go-logformat"
 )
 
 var object = map[string]interface{}{
@@ -50,10 +50,10 @@ var object = map[string]interface{}{
 
 // Test formatting.
 func TestPrint(t *testing.T) {
-	pretty.Print(object)
+	logformat.Print(object)
 }
 
 // Test formatting with custom color.
 func TestPrint_WithColor(t *testing.T) {
-	pretty.Print(object, pretty.WithColor(164, 33, 78))
+	logformat.Print(object, logformat.WithColor(164, 33, 78))
 }

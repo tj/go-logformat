@@ -1,3 +1,3 @@
-# Pretty
+# Log Format
 
-Some stuff I need, probably not useful for anyone else, it only supports JSON types.
+Some log formatting stuff, it's not super useful for other people.

@@ -1,6 +1,5 @@
-// Package pretty provides pretty printing for unmarshaled JSON Go types,
-// thus it is very niche and probably not useful for you, I just need it for a few things.
-package pretty
+// Package logformat provides some ad-hoc log formatting for some of my projects.
+package logformat
 
 import (
 	"fmt"
