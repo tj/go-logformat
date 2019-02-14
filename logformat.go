@@ -17,8 +17,8 @@ type FormatFunc func(string) string
 // Formatters is a map of formatting functions.
 type Formatters map[string]FormatFunc
 
-// defaultFormatters is a set of default formatters.
-var defaultFormatters = Formatters{
+// DefaultFormatters is a set of default formatters.
+var DefaultFormatters = Formatters{
 	// Levels.
 	"debug":     colors.Gray,
 	"info":      colors.Purple,
@@ -63,7 +63,7 @@ func WithFormatters(f Formatters) Option {
 // Compact returns a value in the compact format.
 func Compact(v map[string]interface{}, options ...Option) string {
 	c := config{
-		format: defaultFormatters,
+		format: DefaultFormatters,
 	}
 	for _, o := range options {
 		o(&c)
@@ -118,7 +118,7 @@ func compactSlice(v []interface{}, c *config) string {
 // Expanded returns a value in the expanded format.
 func Expanded(v map[string]interface{}, options ...Option) string {
 	c := config{
-		format: defaultFormatters,
+		format: DefaultFormatters,
 	}
 	for _, o := range options {
 		o(&c)
