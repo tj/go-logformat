@@ -32,6 +32,7 @@ var log = map[string]interface{}{
 				},
 			},
 			"total": 15.99,
+			"paid":  false,
 		},
 		"pets": map[string]interface{}{
 			"list": []interface{}{
@@ -49,12 +50,12 @@ var log = map[string]interface{}{
 	},
 }
 
-// Test expanded logs.
-func TestExpanded(t *testing.T) {
-	fmt.Printf("%s", logformat.Expanded(log))
+// Test compact logs.
+func TestCompact(t *testing.T) {
+	fmt.Printf("%s\n\n", logformat.Compact(log))
 }
 
-// Test expanded logs with color.
-func TestExpanded_WithColor(t *testing.T) {
-	fmt.Printf("%s", logformat.Expanded(log, logformat.WithColor(164, 33, 78)))
+// Test expanded logs.
+func TestExpanded(t *testing.T) {
+	fmt.Printf("%s\n", logformat.Expanded(log))
 }
