@@ -45,13 +45,6 @@ var defaultFormatters = Formatters{
 	"array.separator": colors.Gray,
 }
 
-// rgb struct.
-type rgb struct {
-	r uint8
-	g uint8
-	b uint8
-}
-
 // config is the formatter configuration.
 type config struct {
 	format Formatters
