@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/nqd/flat"
-
 	"github.com/tj/go-logformat/internal/colors"
 )
 
