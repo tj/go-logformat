@@ -87,7 +87,7 @@ func Compact(m map[string]interface{}, options ...Option) string {
 	}
 
 	if c.flatten {
-		m, _ = flat.Flatten(m, nil)
+		m, _ = flat.Flatten(m, &flat.Options{Safe: true, Delimiter: "."})
 	}
 
 	return compactPrefix(m, &c) + compact(m, &c)
