@@ -86,10 +86,6 @@ func Compact(m map[string]interface{}, options ...Option) string {
 		o(&c)
 	}
 
-	if c.flatten {
-		m, _ = flat.Flatten(m, &flat.Options{Safe: true, Delimiter: "."})
-	}
-
 	return compactPrefix(m, &c) + compact(m, &c)
 }
 
@@ -97,6 +93,9 @@ func Compact(m map[string]interface{}, options ...Option) string {
 func compact(v interface{}, c *config) string {
 	switch v := v.(type) {
 	case map[string]interface{}:
+		if c.flatten {
+			v, _ = flat.Flatten(v, &flat.Options{Safe: true, Delimiter: "."})
+		}
 		return compactMap(v, c)
 	case []interface{}:
 		return compactSlice(v, c)

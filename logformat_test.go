@@ -26,11 +26,15 @@ func newLog() map[string]interface{} {
 		"cart": map[string]interface{}{
 			"items": []interface{}{
 				map[string]interface{}{
-					"name": "Ferret food",
+					"details": map[string]interface{}{
+						"name": "Ferret food",
+					},
 					"cost": 10.99,
 				},
 				map[string]interface{}{
-					"name": "Cat food",
+					"details": map[string]interface{}{
+						"name": "Cat food",
+					},
 					"cost": 25.99,
 				},
 			},
