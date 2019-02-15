@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/nqd/flat"
+
 	"github.com/tj/go-logformat/internal/colors"
 )
 
@@ -47,16 +49,24 @@ var DefaultFormatters = Formatters{
 
 // config is the formatter configuration.
 type config struct {
-	format Formatters
+	format  Formatters
+	flatten bool
 }
 
 // Option function.
 type Option func(*config)
 
-// WithFormatters option sets the formatters used.
-func WithFormatters(f Formatters) Option {
-	return func(v *config) {
-		v.format = f
+// WithFormatters overrides the default formatters.
+func WithFormatters(v Formatters) Option {
+	return func(c *config) {
+		c.format = v
+	}
+}
+
+// WithFlatten toggles flattening of fields.
+func WithFlatten(v bool) Option {
+	return func(c *config) {
+		c.flatten = v
 	}
 }
 
@@ -65,9 +75,15 @@ func Compact(m map[string]interface{}, options ...Option) string {
 	c := config{
 		format: DefaultFormatters,
 	}
+
 	for _, o := range options {
 		o(&c)
 	}
+
+	if c.flatten {
+		m, _ = flat.Flatten(m, nil)
+	}
+
 	return compactPrefix(m, &c) + compact(m, &c)
 }
 
