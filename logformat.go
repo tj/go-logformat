@@ -192,10 +192,12 @@ func Expanded(m map[string]interface{}, options ...Option) string {
 	c := config{
 		format: DefaultFormatters,
 	}
+
 	for _, o := range options {
 		o(&c)
 	}
-	return expanded(m, "  ", &c)
+
+	return compactPrefix(m, &c) + "\n\n" + expanded(m, "  ", &c)
 }
 
 // expanded returns a formatted value with prefix.
