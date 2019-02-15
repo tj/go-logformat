@@ -157,9 +157,7 @@ func compactPrefix(m map[string]interface{}, c *config) string {
 
 // compactMap returns a formatted map.
 func compactMap(m map[string]interface{}, c *config) string {
-	if c.flatten {
-		m, _ = flat.Flatten(m, &flat.Options{Safe: true, Delimiter: "."})
-	}
+	m = maybeFlatten(m, c)
 	s := ""
 	keys := mapKeys(m)
 	for i, k := range keys {
@@ -215,9 +213,7 @@ func expanded(v interface{}, prefix string, c *config) string {
 
 // expandedMap returns a formatted map.
 func expandedMap(m map[string]interface{}, prefix string, c *config) string {
-	if c.flatten {
-		m, _ = flat.Flatten(m, &flat.Options{Safe: true, Delimiter: "."})
-	}
+	m = maybeFlatten(m, c)
 	s := ""
 	keys := mapKeys(m)
 	for _, k := range keys {
@@ -310,4 +306,12 @@ func dateSuffix(t time.Time) string {
 	default:
 		return "th"
 	}
+}
+
+// maybeFlatten returns a the original or flattened map when configured to do so.
+func maybeFlatten(m map[string]interface{}, c *config) map[string]interface{} {
+	if c.flatten {
+		m, _ = flat.Flatten(m, &flat.Options{Safe: true, Delimiter: "."})
+	}
+	return m
 }
