@@ -74,3 +74,9 @@ func TestExpanded(t *testing.T) {
 	log := newLog()
 	fmt.Printf("%s\n", logformat.Expanded(log))
 }
+
+// Test expanded logs with flattening.
+func TestExpanded_WithFlatten(t *testing.T) {
+	log := newLog()
+	fmt.Printf("%s\n", logformat.Expanded(log, logformat.WithFlatten(true)))
+}

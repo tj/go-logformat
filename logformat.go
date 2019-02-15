@@ -93,9 +93,6 @@ func Compact(m map[string]interface{}, options ...Option) string {
 func compact(v interface{}, c *config) string {
 	switch v := v.(type) {
 	case map[string]interface{}:
-		if c.flatten {
-			v, _ = flat.Flatten(v, &flat.Options{Safe: true, Delimiter: "."})
-		}
 		return compactMap(v, c)
 	case []interface{}:
 		return compactSlice(v, c)
@@ -160,6 +157,9 @@ func compactPrefix(m map[string]interface{}, c *config) string {
 
 // compactMap returns a formatted map.
 func compactMap(m map[string]interface{}, c *config) string {
+	if c.flatten {
+		m, _ = flat.Flatten(m, &flat.Options{Safe: true, Delimiter: "."})
+	}
 	s := ""
 	keys := mapKeys(m)
 	for i, k := range keys {
@@ -215,6 +215,9 @@ func expanded(v interface{}, prefix string, c *config) string {
 
 // expandedMap returns a formatted map.
 func expandedMap(m map[string]interface{}, prefix string, c *config) string {
+	if c.flatten {
+		m, _ = flat.Flatten(m, &flat.Options{Safe: true, Delimiter: "."})
+	}
 	s := ""
 	keys := mapKeys(m)
 	for _, k := range keys {
