@@ -46,8 +46,11 @@ var DefaultFormatters = Formatters{
 	"array.delimiter": colors.Gray,
 	"array.separator": colors.Gray,
 
-	// Special values.
+	// Special fields.
 	"message": colors.None,
+	"program": colors.Gray,
+	"stage":   colors.Gray,
+	"version": colors.Gray,
 }
 
 // config is the formatter configuration.
@@ -122,6 +125,29 @@ func compactPrefix(m map[string]interface{}, c *config) string {
 			s += bold(format(strings.ToUpper(v[:4]))) + " "
 			delete(m, "level")
 		}
+	}
+
+	// application
+	if v, ok := m["application"].(string); ok {
+		s += c.format["application"](v) + " "
+		delete(m, "application")
+	}
+
+	// stage
+	if v, ok := m["stage"].(string); ok {
+		s += c.format["stage"](v) + " "
+		delete(m, "stage")
+	}
+
+	// version
+	if v, ok := m["version"]; ok {
+		switch v := v.(type) {
+		case string:
+			s += c.format["version"](v) + " "
+		case float64:
+			s += c.format["version"](strconv.FormatFloat(v, 'f', -1, 64)) + " "
+		}
+		delete(m, "version")
 	}
 
 	// message
