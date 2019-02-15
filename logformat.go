@@ -45,6 +45,9 @@ var DefaultFormatters = Formatters{
 	// Arrays.
 	"array.delimiter": colors.Gray,
 	"array.separator": colors.Gray,
+
+	// Special values.
+	"message": colors.None,
 }
 
 // config is the formatter configuration.
@@ -123,7 +126,7 @@ func compactPrefix(m map[string]interface{}, c *config) string {
 
 	// message
 	if v, ok := m["message"].(string); ok {
-		s += primitive(v, c) + " "
+		s += c.format["message"](v) + " "
 		delete(m, "message")
 	}
 

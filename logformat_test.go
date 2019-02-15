@@ -11,7 +11,7 @@ import (
 var log = map[string]interface{}{
 	// "timestamp": time.Now(),
 	"timestamp": time.Now().Format(time.RFC3339),
-	"message":   "response",
+	"message":   "http request",
 	"app":       "up-api",
 	"version":   27,
 	"level":     "info",
