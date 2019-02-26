@@ -52,6 +52,40 @@ var DefaultFormatters = Formatters{
 	"version": colors.Gray,
 }
 
+// NoColor is a set of formatters resulting in no colors.
+var NoColor = Formatters{
+	// Levels.
+	"debug":     colors.None,
+	"info":      colors.None,
+	"warn":      colors.None,
+	"warning":   colors.None,
+	"error":     colors.None,
+	"fatal":     colors.None,
+	"critical":  colors.None,
+	"emergency": colors.None,
+
+	// Values.
+	"string": colors.None,
+	"number": colors.None,
+	"bool":   colors.None,
+	"date":   colors.None,
+
+	// Fields.
+	"object.key":       colors.None,
+	"object.separator": colors.None,
+	"object.value":     colors.None,
+
+	// Arrays.
+	"array.delimiter": colors.None,
+	"array.separator": colors.None,
+
+	// Special fields.
+	"message": colors.None,
+	"program": colors.None,
+	"stage":   colors.None,
+	"version": colors.None,
+}
+
 // config is the formatter configuration.
 type config struct {
 	format  Formatters
