@@ -90,10 +90,18 @@ var NoColor = Formatters{
 type config struct {
 	format  Formatters
 	flatten bool
+	prefix  string
 }
 
 // Option function.
 type Option func(*config)
+
+// WithPrefix sets the prefix of each line.
+func WithPrefix(s string) Option {
+	return func(c *config) {
+		c.prefix = s
+	}
+}
 
 // WithFormatters overrides the default formatters.
 func WithFormatters(v Formatters) Option {
@@ -229,7 +237,8 @@ func compactSlice(v []interface{}, c *config) string {
 
 // Expanded returns a value in the expanded format.
 func Expanded(m map[string]interface{}, options ...Option) string {
-	return expanded(m, "  ", newConfig(options...))
+	c := newConfig(options...)
+	return expanded(m, c.prefix, c)
 }
 
 // expanded returns a formatted value with prefix.

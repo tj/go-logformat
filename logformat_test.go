@@ -86,3 +86,9 @@ func TestExpanded_WithFlatten(t *testing.T) {
 	log := newLog()
 	fmt.Printf("%s\n", logformat.Expanded(log, logformat.WithFlatten(true)))
 }
+
+// Test expanded logs with prefix.
+func TestExpanded_WithPrefix(t *testing.T) {
+	log := newLog()
+	fmt.Printf("%s\n", logformat.Expanded(log, logformat.WithPrefix("  ")))
+}
