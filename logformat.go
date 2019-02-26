@@ -109,17 +109,22 @@ func WithFlatten(v bool) Option {
 	}
 }
 
-// Compact returns a value in the compact format.
-func Compact(m map[string]interface{}, options ...Option) string {
-	c := config{
+// newConfig returns config with options applied.
+func newConfig(options ...Option) *config {
+	c := &config{
 		format: DefaultFormatters,
 	}
 
 	for _, o := range options {
-		o(&c)
+		o(c)
 	}
 
-	return compactPrefix(m, &c) + compact(m, &c)
+	return c
+}
+
+// Compact returns a value in the compact format.
+func Compact(m map[string]interface{}, options ...Option) string {
+	return compact(m, newConfig(options...))
 }
 
 // compact returns a formatted value.
@@ -134,9 +139,10 @@ func compact(v interface{}, c *config) string {
 	}
 }
 
-// compactPrefix returns a prefix for log line special-casing, and removes those fields from the map.
-func compactPrefix(m map[string]interface{}, c *config) string {
-	s := "  "
+// Prefix returns a prefix for log line special-casing, and removes those fields from the map.
+func Prefix(m map[string]interface{}, options ...Option) string {
+	s := ""
+	c := newConfig(options...)
 
 	// timestamp
 	if v, ok := m["timestamp"].(string); ok {
@@ -181,7 +187,7 @@ func compactPrefix(m map[string]interface{}, c *config) string {
 
 	// message
 	if v, ok := m["message"].(string); ok {
-		s += c.format["message"](v) + " "
+		s += c.format["message"](v)
 		delete(m, "message")
 	}
 
@@ -223,15 +229,7 @@ func compactSlice(v []interface{}, c *config) string {
 
 // Expanded returns a value in the expanded format.
 func Expanded(m map[string]interface{}, options ...Option) string {
-	c := config{
-		format: DefaultFormatters,
-	}
-
-	for _, o := range options {
-		o(&c)
-	}
-
-	return compactPrefix(m, &c) + "\n\n" + expanded(m, "  ", &c)
+	return expanded(m, "  ", newConfig(options...))
 }
 
 // expanded returns a formatted value with prefix.

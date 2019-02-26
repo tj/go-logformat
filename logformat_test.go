@@ -57,6 +57,12 @@ func newLog() map[string]interface{} {
 	}
 }
 
+// Test prefix.
+func TestPrefix(t *testing.T) {
+	log := newLog()
+	fmt.Printf("%s — %s\n\n", logformat.Prefix(log), logformat.Compact(log))
+}
+
 // Test compact logs.
 func TestCompact(t *testing.T) {
 	log := newLog()
