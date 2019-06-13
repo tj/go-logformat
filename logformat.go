@@ -12,8 +12,11 @@ import (
 	"github.com/tj/go-logformat/internal/colors"
 )
 
-// FormatFunc is a function for formatting values.
+// FormatFunc is a function used for formatting values.
 type FormatFunc func(string) string
+
+// DateFormatFunc is the function used for formatting dates.
+type DateFormatFunc func(time.Time) string
 
 // Formatters is a map of formatting functions.
 type Formatters map[string]FormatFunc
@@ -88,9 +91,10 @@ var NoColor = Formatters{
 
 // config is the formatter configuration.
 type config struct {
-	format  Formatters
-	flatten bool
-	prefix  string
+	format     Formatters
+	formatDate DateFormatFunc
+	flatten    bool
+	prefix     string
 }
 
 // Option function.
@@ -110,6 +114,13 @@ func WithFormatters(v Formatters) Option {
 	}
 }
 
+// WithDateFormatter overrides the default date formatter.
+func WithDateFormatter(v DateFormatFunc) Option {
+	return func(c *config) {
+		c.formatDate = v
+	}
+}
+
 // WithFlatten toggles flattening of fields.
 func WithFlatten(v bool) Option {
 	return func(c *config) {
@@ -120,7 +131,8 @@ func WithFlatten(v bool) Option {
 // newConfig returns config with options applied.
 func newConfig(options ...Option) *config {
 	c := &config{
-		format: DefaultFormatters,
+		format:     DefaultFormatters,
+		formatDate: formatDate,
 	}
 
 	for _, o := range options {
@@ -295,7 +307,7 @@ func primitive(v interface{}, c *config) string {
 			return c.format["string"](v)
 		}
 	case time.Time:
-		return c.format["date"](formatDate(v))
+		return c.format["date"](c.formatDate(v))
 	case bool:
 		return c.format["bool"](strconv.FormatBool(v))
 	case float64:
@@ -328,26 +340,12 @@ func mapKeys(m map[string]interface{}) (keys []string) {
 
 // formatDate formats t relative to now.
 func formatDate(t time.Time) string {
-	return t.Format(`Jan 2` + dateSuffix(t) + ` 03:04:05pm`)
+	return t.Format(`2006-01-02 15:04:05 MST`)
 }
 
 // bold string.
 func bold(s string) string {
 	return fmt.Sprintf("\033[1m%s\033[0m", s)
-}
-
-// dateSuffix returns the date suffix for t.
-func dateSuffix(t time.Time) string {
-	switch t.Day() {
-	case 1, 21, 31:
-		return "st"
-	case 2, 22:
-		return "nd"
-	case 3, 23:
-		return "rd"
-	default:
-		return "th"
-	}
 }
 
 // maybeFlatten returns a the original or flattened map when configured to do so.
